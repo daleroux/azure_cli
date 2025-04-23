@@ -1,0 +1,12 @@
+---
+- name: Login to Azure with Credentials
+  ansible.builtin.command: az login --service-principal -u {{ spn_client_id }} -p {{ spn_secret }} --tenant {{ tenant_id }}
+  no_log: true
+  changed_when: false
+  failed_when: false
+
+- name: Add the resource-graph extension
+  ansible.builtin.command: az extension add -n resource-graph -y --debug
+  register: graph_extension
+  changed_when: "'already installed' in graph_extension.stdout or 'is already installed' in graph_extension.stderr"
+  failed_when: false
